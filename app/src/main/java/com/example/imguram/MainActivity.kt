@@ -1,15 +1,13 @@
 package com.example.imguram
 
 import android.os.Bundle
-import android.util.Log
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.imguram.databinding.ActivityMainBinding
-import com.example.libimgur.ImgurAPI
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
 
@@ -34,7 +32,5 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
-        val imgurAPI = ImgurAPI()
-        Log.d("IMGUR" , "a = ${imgurAPI.a}")
     }
 }
