@@ -7,7 +7,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import com.example.imguram.R
+import com.example.imguram.databinding.FragmentFeedBinding
 
 class FeedFragment : Fragment() {
 
@@ -15,24 +19,23 @@ class FeedFragment : Fragment() {
         fun newInstance() = FeedFragment()
     }
 
-    private lateinit var viewModel: FeedViewModel
+    private val viewModel: FeedViewModel by activityViewModels()
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        val feed = arguments?.getString("feed")
+        feed?.let {
+            viewModel.updateFeed(it)
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val feed = arguments?.getString("feed")
-        val rootView = inflater.inflate(R.layout.fragment_feed, container, false)
-        feed?.let {
-            rootView.findViewById<TextView>(R.id.tvFeedType).text = it
-        }
-        return rootView
-    }
+        val binding = FragmentFeedBinding.inflate(layoutInflater , container , false)
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(FeedViewModel::class.java)
-        // TODO: Use the ViewModel
+        return binding.root
     }
 
 }
