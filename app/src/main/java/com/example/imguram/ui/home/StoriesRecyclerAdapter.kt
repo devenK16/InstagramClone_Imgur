@@ -1,6 +1,7 @@
-package com.example.imguram.ui.story
+package com.example.imguram.ui.home
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -8,6 +9,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.example.imguram.databinding.ListItemStoryHeadBinding
+import com.example.imguram.ui.story.StoryActivity
 import com.example.libimgur.models.Tag
 
 class StoriesRecyclerAdapter :
@@ -36,11 +38,11 @@ class StoriesRecyclerAdapter :
         holder.binding.storyHeadImageView.load("https://i.imgur.com/${tag.backgroundHash}.jpg")
         holder.binding.root.apply {
             setOnClickListener {
-//                context.startActivity(
-//                    Intent(context, StoryActivity::class.java).apply {
-//                        putExtra("tag", tag.name)
-//                    }
-//                )
+                context.startActivity(
+                    Intent(context, StoryActivity::class.java).apply {
+                        putExtra("tag", tag.name)
+                    }
+                )
             }
         }
     }

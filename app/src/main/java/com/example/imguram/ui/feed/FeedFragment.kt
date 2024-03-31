@@ -11,6 +11,8 @@ import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import coil.Coil
+import coil.request.ImageRequest
 import com.example.imguram.R
 import com.example.imguram.databinding.FragmentFeedBinding
 
@@ -22,26 +24,33 @@ class FeedFragment : Fragment() {
 
     private val viewModel: FeedViewModel by viewModels()
     private val feedAdapter = FeedRecyclerAdapter()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        val feed = arguments?.getString("feed")
-        feed?.let {
-            viewModel.updateFeed(it)
-        }
+        val feed = arguments?.getString("feed") // TODO: turn into enum
+        feed?.let { viewModel.updateFeed(it) }
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val binding = FragmentFeedBinding.inflate(layoutInflater , container , false)
+    ): View {
+        val binding = FragmentFeedBinding.inflate(inflater, container, false)
         binding.feedRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.feedRecyclerView.adapter = feedAdapter
-        viewModel.feed.observe(viewLifecycleOwner) { images ->
-            feedAdapter.submitList(images)
+
+        viewModel.feed.observe(viewLifecycleOwner) {
+            it.forEach { image ->
+                val request = ImageRequest.Builder(requireContext())
+                    .data("https://i.imgur.com/${image.cover}.jpg")
+                    // Optional, but setting a ViewSizeResolver will conserve memory by limiting the size the image should be preloaded into memory at.
+                    .size(binding.feedRecyclerView.width)
+                    .build()
+                Coil.imageLoader(requireContext()).enqueue(request)
+            }
+            feedAdapter.submitList(it)
         }
+
         return binding.root
     }
-
 }
