@@ -4,13 +4,11 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import com.example.imguram.databinding.ActivityMainBinding
+import com.example.imguram.ui.story.StoriesRecyclerAdapter
 import com.example.imguram.ui.story.StoryViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
@@ -18,16 +16,19 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private val storiesViewModel by viewModels<StoryViewModel> ()
-
+    private val storiesAdapter = StoriesRecyclerAdapter()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        binding.storiesRecyclerView.layoutManager = LinearLayoutManager(this , RecyclerView.HORIZONTAL , false)
+        binding.storiesRecyclerView.apply {
+            layoutManager = LinearLayoutManager(context , RecyclerView.HORIZONTAL , false)
+            adapter = storiesAdapter
+        }
 
         setUpNav()
-        storiesViewModel.fetchTagGallery("")
+        storiesViewModel.fetchTags()
     }
 
     private fun setUpNav(){
@@ -47,8 +48,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        storiesViewModel.images.observe(this){
-            binding.storiesRecyclerView
+        storiesViewModel.tags.observe(this){
+            storiesAdapter.submitList(it)
         }
     }
 }
